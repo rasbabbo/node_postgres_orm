@@ -14,5 +14,13 @@
     "express": "^4.6.1",
     "method-override": "^2.1.1",
     "pg": "^3.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wdi-sf-july/node_postgres_orm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wdi-sf-july/node_postgres_orm/issues"
+  },
+  "homepage": "https://github.com/wdi-sf-july/node_postgres_orm"
 }
