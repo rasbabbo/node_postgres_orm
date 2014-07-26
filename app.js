@@ -1,4 +1,4 @@
-var express = require('express'),
+  var express = require('express'),
   bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
   Person = require('./models/main.js').Person,
@@ -19,14 +19,31 @@ app.get("/people", function(req, res){
 });
 
 app.get("/people/new", function(req, res){
-  res.render("people/new")
+  var insert = Person.create(params);
+  request(insert, function(error, response, body) {
+    if (!error) {
+      var data = JSON.parse(body);
+      res.render("index.ejs", {newList: data.Search || [] })
+    }
+  });
+  // res.render("people/new")
 });
 
 app.get("/people/:id", function(req,res){
+  var query = req.params.id;
+  var person = Person.findBy(id);
+  request (person, function(error, response, body){
+    if(!error) {
+      var data = JSON.parse(body);
+    }
+  });
   res.render("people/show", {person: {} });
 });
 
-app.get("/people/:id/edit", function(req,res){
+
+
+app.post("/people/:id/edit", function(req,res){
+  var change = Person.update(params);
   res.render("people/edit", {person: {} });
 });
 

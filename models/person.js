@@ -11,27 +11,40 @@ Person.all = function(callback){
   db.query("SELECT * FROM people",[], function(err, res){
     var allPeople = [];
     // do something here with res
-    res.rows.forEach(function(params){
-      allPeople.push(new Person(params));
+    if (err) {
+      console.log ("error")
+    } else {
+      console.log(res.rows);
+      res.rows.forEach(function(personThing){
+        allPeople.push(new Person(personThing))
       });
-    callback(err, allPeople);
-  });
+    }
+      callback(err, allPeople);
+    });
 }
 
 Person.findBy = function(key, val, callback) {
-  db.query("SELECT * FROM people WHERE id = $2",[key, val], function(err, res){
-    var foundRow, foundPerson;
-    // do something here with res
-
+  var str = "SELECT * FROM people WHERE " + key + " = $1"
+  db.query(str, [val], function(err, res){
+    var foundRow = res.rows[0];
+    var foundPerson = new Person(foundRow);
+    console.log(foundRow);
     callback(err, foundPerson);
   });
 };
 
 
-
 Person.create = function(params, callback){
-  db.query("INSERT INTO people (firstname, lastname) VALUES ($1, $2)", [params.firstname, params.lastname], function(err, res){
+  db.query("INSERT INTO people (firstname, lastname) VALUES ($1, $2)", 
+    [params.firstname, params.lastname], 
+    function(err, res){
     var createdRow, newPerson;
+    
+    // createdRow = function(params) {
+    //   firstname = params.firstname;
+    //   lastname = params.lastname;
+    // };
+    // newPerson = createdRow;
     callback(err, newPerson);
   });
 };
@@ -68,10 +81,12 @@ Person.prototype.update = function(params, callback) {
   });
 }
 
-Person.prototype.destroy = function(){
-  db.query("", [this.id], function(err, res) {
-    callback(err)
-  });
+Person.prototype.destroy = function(key, val, callback){
+  var del = "DELETE * FROM people WHERE " + key + " = $1"
+  db.query(del, [val], function(err, res) {
+      console.log("deleted ", res);
+      // callback(err, res)
+    });
 }
 
 module.exports = Person;
