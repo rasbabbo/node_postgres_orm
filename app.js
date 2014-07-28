@@ -1,7 +1,7 @@
   var express = require('express'),
   bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
-  Person = require('./models/main.js').Person,
+  Person = require('./models/person'),
   app = express();
 
 
@@ -10,57 +10,103 @@ app.set("view engine", "ejs");
 // Middleware
 app.use(bodyParser.urlencoded());
 app.use(methodOverride("_method"));
+// app.use(express.static(_dirname + 'public'));
 
 
 
 
 app.get("/people", function(req, res){
-  res.render("people/index", {people: []})
+  Person.all(function(err, allPeople) {
+    if (err) {
+      console.error('Mucked up!', err);
+    } else {
+       res.render("people/index", {people: []})
+    }
+  });
 });
+
+
 
 app.get("/people/new", function(req, res){
-  var insert = Person.create(params);
-  request(insert, function(error, response, body) {
-    if (!error) {
-      var data = JSON.parse(body);
-      res.render("index.ejs", {newList: data.Search || [] })
-    }
-  });
-  // res.render("people/new")
+  res.render("people/new")
 });
+
+
 
 app.get("/people/:id", function(req,res){
-  var query = req.params.id;
-  var person = Person.findBy(id);
-  request (person, function(error, response, body){
-    if(!error) {
-      var data = JSON.parse(body);
+  personId = req.params.id;
+  Person.findBy('id', personId, function(err, person) {
+    if (err) {
+      console.error ('Uh oh', err);
+    } else {
+      res.render("people/show", {person: person}); 
     }
   });
-  res.render("people/show", {person: {} });
 });
 
 
 
-app.post("/people/:id/edit", function(req,res){
-  var change = Person.update(params);
-  res.render("people/edit", {person: {} });
+app.get("/people/:id/edit", function(req,res){
+  personId = req.params.id;
+  Person.findBy('id', personId, function(err, person) {
+    if (err) {
+      console.error ('Uh oh', err);
+    } else {
+      res.render('people/edit', {person: person}); 
+    }
+  });
 });
+
 
 
 
 app.post("/people", function(req, res){
-  res.redirect("/people")
+  newPerson = Person.create(req.body, function(err, newPerson) {
+    if (err) {
+      console.error('un problemo', err)
+    } else {
+      res.redirect("/people")
+    }
+  });
 });
+
+
 
 app.delete("/people/:id", function(req, res){
-  res.redirect("/people");
+  personID = req.params.id;
+  Person.findby('id', personId, function(err, person) {
+    if (err) {
+      console.error("ohh no", err);
+      } else {
+      person.destroy(function(err) {
+        if (err) {
+          console.error('trouble!', err);
+        } else {
+          res.redirect("/people");
+        }
+      });
+    }
+  });
 });
 
+
 app.put("/people/:id", function(req,res){
-  res.redirect("/people");
-})
+  personID = req.params.id;
+  Person.findby('id', personId, function(err, person) {
+    if (err) {
+      console.error("ohh no", err);
+      } else {
+      person.update({firstname: req.body.firstname, lastname: req.body.lastname}, function(err, person) {
+        if (err) {
+          console.error('trouble!', err);
+        } else {
+          res.redirect("/people");
+        }
+      });
+    }
+  });
+});
 
 app.listen(3000, function(){
-  console.log("THE SERVER IS LISTENING ON localhost:3000");
+  console.log("THE SERVER IS CRAZYx ON localhost:3000");
 });

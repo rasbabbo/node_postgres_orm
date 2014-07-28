@@ -1,18 +1,20 @@
 <!doctype html>
 <html>
   <head>
-    <title>Purple People Picker</title>
+    <title>This is what we got on You</title>
     <link rel="stylesheet" href="styles/main.css">
   </head>
   <body>
-    <h1>People:</h1>
+    <h1>Info shared with NSA:</h1>
     <ul>
-      <% people.forEach(function(person) { %>
+<!--       <% people.forEach(function(person) { %> -->
       <li> <%=person.firstname %> </li>
       <li> <%=person.lastname %> </li>
       <li> Most importantly, your code: <%= person.id %>
     <% }) %>
   </ul>
+
+  <a href="/people/<%= person.id %>/edit" class = "link" id="tired">Go and Edit yourself</a>
 
   </body>
 </html>

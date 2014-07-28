@@ -1,8 +1,25 @@
 <!doctype html>
 <html>
   <head>
+  	<title>A People Listing Thingy</title>
+  	<link rel="stylesheet" href="/styles/main.css">
   </head>
   <body>
+  	<h1> Check yourself or Edit yourself</h1>
+
+  	<form method="post" action="/people/ <%=person.id %>?_method=put">
+  		<h2>Your Very Own First Name!</h2>
+  		<input type="text" name="firstname" id="first_name" placeholder = "First Name" value =<%= person.firstname%>>
+
+  		<h2>Your Folks or Spouse's Last Name</h2>
+  		<input type="text" name = "lastname" id="last_name" placeholder = "Last Name" value=<%=person.lastname%>>
+
+  		<button class="save" id="save">Save Yourself</button>
+    </form>
+
+    <form method="post" action="/people/<%=person.id%>?_method=delete">
+      <button class="delete" id="delete">Destroy Yourself Fo'Evah!</button>
+    </form>
 
   </body>
 </html>
